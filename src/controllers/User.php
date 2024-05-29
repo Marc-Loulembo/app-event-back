@@ -3,13 +3,13 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
-use App\Models\Usermodel;
+use App\Models\UserModel;
 
 class User extends Controller {
   protected object $user;
 
   public function __construct($param) {
-    $this->user = new Usermodel();
+    $this->user = new UserModel();
 
     parent::__construct($param);
   }
