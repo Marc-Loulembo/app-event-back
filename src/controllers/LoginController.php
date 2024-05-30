@@ -2,43 +2,57 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
-use App\Models\UserModel;
-
-class Login extends Controller {
-  
-  protected $userModel;
+class Controller {
+  protected array $params;
+  protected string $reqMethod;
+  protected array $body;
+  protected string $className;
 
   public function __construct($params) {
-    $this->userModel = new UserModel();
-    parent::__construct($params);
+    $this->className = $this->getCallerClassName();
+    $this->params = $params;
+    $this->reqMethod = strtolower($_SERVER['REQUEST_METHOD']);
+    $this->body = (array) json_decode(file_get_contents('php://input'));
+
+    $this->ifMethodExist();
+
+    if ($this->reqMethod === 'options') {
+        $this->optionsEvent();
+    }
   }
 
-  public function postLogin() {
-    $email = isset($this->body['email']) ? $this->body['email'] : null;
-    $password = isset($this->body['password']) ? $this->body['password'] : null;
+  protected function getCallerClassName() {
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 
-    if ($email && $password) {
-      $user = $this->userModel->getByEmail($email);
-      
-      if ($user && password_verify($password, $user['password'])) {
-        return [
-          'status' => 'success',
-          'message' => 'Login successful',
-          'user' => $user
-        ];
-      } else {
-        
-        return [
-          'status' => 'error',
-          'message' => 'Invalid email or password'
-        ];
-      }
-    } else {
-      return [
-        'status' => 'error',
-        'message' => 'Email and password are required'
-      ];
+    if (isset($backtrace[1]['object'])) {
+      $fullClassName = get_class($backtrace[1]['object']);
+      $className = basename(str_replace('\\', '/', $fullClassName));
+
+      return $className;
     }
+
+    return 'Unknown';
+  }
+
+  public function optionsEvent() {  
+    header('HTTP/1.0 200 OK'); 
+  }
+
+  protected function ifMethodExist() {
+    $method = $this->reqMethod . $this->className;
+
+    if (method_exists($this, $method)) {
+      echo json_encode($this->$method());
+
+      return;
+    }
+
+    header('HTTP/1.0 404 Not Found');
+    echo json_encode([
+      'code' => '404',
+      'message' => 'Not Found'
+    ]);
+
+    return;
   }
 }

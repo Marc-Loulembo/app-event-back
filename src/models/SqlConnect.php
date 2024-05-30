@@ -13,7 +13,7 @@ class SqlConnect {
   private string $user;
 
   public function __construct() {
-    $this->host = '127.0.0.1';
+    $this->host = 'localhost';
     $this->port = '3306';
     $this->dbname = 'app_event';
     $this->user = 'marco';

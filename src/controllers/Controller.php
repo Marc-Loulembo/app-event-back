@@ -14,10 +14,7 @@ class Controller {
     $this->reqMethod = strtolower($_SERVER['REQUEST_METHOD']);
     $this->body = (array) json_decode(file_get_contents('php://input'));
 
-    $this->header();
     $this->ifMethodExist();
-
-    $this->optionsEvent();
   }
 
   protected function getCallerClassName() {
@@ -31,25 +28,6 @@ class Controller {
     }
 
     return 'Unknown';
-  }
-
-  protected function header() {
-    header('Access-Control-Allow-Origin: http://127.0.0.1:9090');
-    header('Content-type: application/json; charset=utf-8');
-    header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  }
-
-  protected function setCorsHeaders() {
-    header('Access-Control-Allow-Origin: *');     
-    header('Content-type: application/json; charset=utf-8');    
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');     
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');   
-  }
-
-  public function optionsEvent() {  
-    $this->setCorsHeaders();
-    header('HTTP/1.0 200 OK'); 
   }
 
   protected function ifMethodExist() {
