@@ -4,11 +4,10 @@ require 'vendor/autoload.php';
 
 use App\Router;
 use App\Controllers\User;
-use App\Controllers\Authentification;
-// use App\Controllers\LoginController;
+use App\Controllers\Auth;
 
 new Router([
   'user/:id' => User::class,
-  'register' => Authentification::class, 
-  'login' => Authentification::class,
+  'register' => Auth::class, 
+  'auth' => Auth::class
 ]);
