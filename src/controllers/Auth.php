@@ -44,10 +44,11 @@ class Auth extends Controller {
         error_log("User not found");
     }
 
-    if ($user && $password === $user['password']) { //pour récupérer un mot de passe hashé : password_verify($password === $user['password'])
+    if ($user && password_verify($password, $user['password'])) { //pour récupérer un mot de passe hashé : password_verify($password, $user['password'])
         return [
             'status' => 'success',
-            'message' => 'Login successful'
+            'message' => 'Login successful',
+            'redirect_url' => '/home' 
         ];
     }
 
