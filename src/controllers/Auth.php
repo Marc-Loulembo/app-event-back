@@ -12,6 +12,7 @@ class Auth extends Controller {
     parent::__construct($param);
 
     $this->optionsEvent();
+    session_start();
   }
 
   protected function setCorsHeaders() {
@@ -44,7 +45,8 @@ class Auth extends Controller {
         error_log("User not found");
     }
 
-    if ($user && password_verify($password, $user['password'])) { //pour récupérer un mot de passe hashé : password_verify($password, $user['password'])
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user; // Store user info in session
         return [
             'status' => 'success',
             'message' => 'Login successful'
@@ -54,6 +56,29 @@ class Auth extends Controller {
     return [
         'status' => 'error',
         'message' => 'Invalid email or password'
+    ];
+  }
+
+  public function getLogout() {
+    session_unset();
+    session_destroy();
+    return [
+        'status' => 'success',
+        'message' => 'Logout successful'
+    ];
+  }
+
+  public function getStatus() {
+    if (isset($_SESSION['user'])) {
+        return [
+            'status' => 'success',
+            'message' => 'User is logged in',
+            'user' => $_SESSION['user']
+        ];
+    }
+    return [
+        'status' => 'error',
+        'message' => 'User is not logged in'
     ];
   }
 }
