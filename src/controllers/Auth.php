@@ -47,8 +47,7 @@ class Auth extends Controller {
     if ($user && password_verify($password, $user['password'])) { //pour récupérer un mot de passe hashé : password_verify($password, $user['password'])
         return [
             'status' => 'success',
-            'message' => 'Login successful',
-            'redirect_url' => '/home' 
+            'message' => 'Login successful'
         ];
     }
 
