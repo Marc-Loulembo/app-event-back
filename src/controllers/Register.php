@@ -15,10 +15,10 @@ class Register extends Controller {
     }
 
     protected function setCorsHeaders() {
-      header('Access-Control-Allow-Origin: *');
-      header('Content-type: application/json; charset=utf-8');
-      header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
-      header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+        header('Access-Control-Allow-Origin: *');
+        header('Content-type: application/json; charset=utf-8');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
     }
 
     public function optionsEvent() {  
@@ -35,7 +35,7 @@ class Register extends Controller {
         $numero = $this->body['numero'];
         $password = $this->body['password'];
 
-        // Vérifier si l'utilisateur existe déjà
+        // je check si l'utilisateur existe déjà 
         if ($this->user->getByEmail($email)) {
             return [
                 'status' => 'error',
@@ -43,7 +43,7 @@ class Register extends Controller {
             ];
         }
 
-        // Hasher le mot de passe
+        // hashage du mot de passe
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
         $data = [
@@ -54,7 +54,7 @@ class Register extends Controller {
             'password' => $hashed_password
         ];
 
-        // Ajouter l'utilisateur à la base de données
+        // j'envoie l'utilisateur dans la base de donnée
         $this->user->add($data);
 
         return [
