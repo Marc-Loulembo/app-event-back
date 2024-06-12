@@ -46,7 +46,7 @@ class Auth extends Controller {
     }
 
     if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user'] = $user; // Store user info in session
+        $_SESSION['user'] = $user;
         return [
             'status' => 'success',
             'message' => 'Login successful'
