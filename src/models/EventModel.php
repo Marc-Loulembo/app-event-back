@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use stdClass;
 
 class EventModel extends SqlConnect {
 
@@ -12,7 +13,7 @@ class EventModel extends SqlConnect {
     $req->execute();
     return $req->fetchAll(PDO::FETCH_ASSOC);
   }
-  
+
   public function add(array $data) {
     $query = "
       INSERT INTO evenements (title, name, adress, description, numero, date, time)

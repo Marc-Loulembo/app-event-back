@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\EventModel;
+use Exception;
 
 class Event extends Controller {
     protected object $event;
@@ -27,91 +28,80 @@ class Event extends Controller {
     public function postEvent() {
         $this->setCorsHeaders();
 
-        $title = $this->body['title'] ?? null;
-        $name = $this->body['name'] ?? null;
-        $adress = $this->body['adress'] ?? null;
-        $description = $this->body['description'] ?? null;
-        $numero = $this->body['numero'] ?? null;
-        $date = $this->body['date'] ?? null;
-        $time = $this->body['time'] ?? null;
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!$title || !$name || !$adress || !$description || !$numero || !$date || !$time) {
-            return json_encode([
-                'status' => 'error',
-                'message' => 'All fields are required'
-            ]);
+            if (!$data) {
+                throw new Exception('Invalid JSON data');
+            }
+
+            $data = [
+                'title' => $data['title'] ?? '',
+                'name' => $data['name'] ?? '',
+                'adress' => $data['adress'] ?? '',
+                'description' => $data['description'] ?? '',
+                'numero' => $data['numero'] ?? '',
+                'date' => $data['date'] ?? '',
+                'time' => $data['time'] ?? ''
+            ];
+
+            if (empty($data['title']) || empty($data['name']) || empty($data['adress']) || empty($data['description']) || empty($data['numero']) || empty($data['date']) || empty($data['time'])) {
+                throw new Exception('All fields are required');
+            }
+
+            $this->event->add($data);
+
+            echo json_encode(['status' => 'success']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
-
-        if ($this->event->exists($title)) {
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Event already exists'
-            ]);
-        }
-
-        $data = [
-            'title' => $title,
-            'name' => $name,
-            'adress' => $adress,
-            'description' => $description,
-            'numero' => $numero,
-            'date' => $date,
-            'time' => $time
-        ];
-
-        $this->event->add($data);
-
-        return json_encode([
-            'status' => 'success',
-            'message' => 'Event added successfully'
-        ]);
     }
 
     public function putEvent($id) {
         $this->setCorsHeaders();
 
-        $title = $this->body['title'] ?? null;
-        $name = $this->body['name'] ?? null;
-        $adress = $this->body['adress'] ?? null;
-        $description = $this->body['description'] ?? null;
-        $numero = $this->body['numero'] ?? null;
-        $date = $this->body['date'] ?? null;
-        $time = $this->body['time'] ?? null;
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!$title || !$name || !$adress || !$description || !$numero || !$date || !$time) {
-            return json_encode([
-                'status' => 'error',
-                'message' => 'All fields are required'
-            ]);
+            if (!$data) {
+                throw new Exception('Invalid JSON data');
+            }
+
+            $data = [
+                'id' => $id,
+                'title' => $data['title'] ?? '',
+                'name' => $data['name'] ?? '',
+                'adress' => $data['adress'] ?? '',
+                'description' => $data['description'] ?? '',
+                'numero' => $data['numero'] ?? '',
+                'date' => $data['date'] ?? '',
+                'time' => $data['time'] ?? ''
+            ];
+
+            if (empty($data['title']) || empty($data['name']) || empty($data['adress']) || empty($data['description']) || empty($data['numero']) || empty($data['date']) || empty($data['time'])) {
+                throw new Exception('All fields are required');
+            }
+
+            $this->event->update($data);
+
+            echo json_encode(['status' => 'success', 'message' => 'Event updated successfully']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
-
-        $data = [
-            'id' => $id,
-            'title' => $title,
-            'name' => $name,
-            'adress' => $adress,
-            'description' => $description,
-            'numero' => $numero,
-            'date' => $date,
-            'time' => $time
-        ];
-
-        $this->event->update($data);
-
-        return json_encode([
-            'status' => 'success',
-            'message' => 'Event updated successfully'
-        ]);
     }
 
     public function deleteEvent($id) {
         $this->setCorsHeaders();
 
-        $this->event->delete($id);
+        try {
+            $this->event->delete($id);
 
-        return json_encode([
-            'status' => 'success',
-            'message' => 'Event deleted successfully'
-        ]);
+            echo json_encode(['status' => 'success', 'message' => 'Event deleted successfully']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 }
