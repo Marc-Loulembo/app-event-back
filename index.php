@@ -13,6 +13,8 @@ new Router([
   'user/:id' => User::class,
   'register' => Register::class,
   'auth' => Auth::class,
+  // 'auth/:logout' => Auth::class,
   'dashboard/:events' => Dashboard::class,
   'event' => Event::class,
+
 ]);

@@ -50,7 +50,7 @@ class Auth extends Controller {
         return [
             'status' => 'success',
             'message' => 'Login successful',
-            'user' => $user
+            'token' => $user
         ];
         return ;
     }
