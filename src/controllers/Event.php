@@ -36,23 +36,19 @@ class Event extends Controller {
             }
 
             $data = [
-                'title' => $data['title'] ?? '',
-                'name' => $data['name'] ?? '',
-                'adress' => $data['adress'] ?? '',
-                'description' => $data['description'] ?? '',
-                'numero' => $data['numero'] ?? '',
-                'date' => $data['date'] ?? '',
-                'time' => $data['time'] ?? ''
+                'title' => $data['title'] ?? NULL,
+                'name' => $data['name'] ?? NULL,
+                'adress' => $data['adress'] ?? NULL,
+                'description' => $data['description'] ?? NULL,
+                'numero' => $data['numero'] ?? NULL,
+                'date' => $data['date'] ?? NULL,
+                'time' => $data['time'] ?? NULL
             ];
-
-            if (empty($data['title']) || empty($data['name']) || empty($data['adress']) || empty($data['description']) || empty($data['numero']) || empty($data['date']) || empty($data['time'])) {
-                throw new Exception('All fields are required');
-            }
 
             $this->event->add($data);
 
-            echo json_encode(['status' => 'success']);
         } catch (Exception $e) {
+            return 'error';
             http_response_code(500);
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }

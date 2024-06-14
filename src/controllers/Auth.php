@@ -49,8 +49,10 @@ class Auth extends Controller {
         $_SESSION['user'] = $user;
         return [
             'status' => 'success',
-            'message' => 'Login successful'
+            'message' => 'Login successful',
+            'user' => $user
         ];
+        return ;
     }
 
     return [
